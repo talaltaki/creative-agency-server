@@ -26,6 +26,7 @@ client.connect((err) => {
   const feedbackCollection = client
     .db("creativeAgency")
     .collection("feedbacks");
+  const adminCollection = client.db("creativeAgency").collection("admins");
 
   app.get("/services", (req, res) => {
     serviceCollection.find({}).toArray((err, documents) => {
@@ -36,6 +37,27 @@ client.connect((err) => {
   app.get("/feedbacks", (req, res) => {
     feedbackCollection.find({}).toArray((err, documents) => {
       res.send(documents);
+    });
+  });
+
+  app.post("/add-feedback", (req, res) => {
+    const feedback = req.body;
+    feedbackCollection.insertOne(feedback).then((result) => {
+      res.send(result);
+    });
+  });
+
+  app.post("/add-service", (req, res) => {
+    const service = req.body;
+    serviceCollection.insertOne(service).then((result) => {
+      res.send(result);
+    });
+  });
+
+  app.post("/add-admin", (req, res) => {
+    const admin = req.body;
+    adminCollection.insertOne(admin).then((result) => {
+      res.send(result);
     });
   });
 });
