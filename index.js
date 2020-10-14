@@ -76,6 +76,19 @@ client.connect((err) => {
         res.send(documents);
       });
   });
+
+  app.get("/all-orders", (req, res) => {
+    orderCollection.find({}).toArray((err, documents) => {
+      res.send(documents);
+    });
+  });
+
+  app.post("/admin", (req, res) => {
+    const email = req.body.email;
+    adminCollection.find({ email: email }).toArray((err, documents) => {
+      res.send(documents.length > 0);
+    });
+  });
 });
 
 app.listen(process.env.PORT || port);
