@@ -27,6 +27,7 @@ client.connect((err) => {
     .db("creativeAgency")
     .collection("feedbacks");
   const adminCollection = client.db("creativeAgency").collection("admins");
+  const orderCollection = client.db("creativeAgency").collection("orders");
 
   app.get("/services", (req, res) => {
     serviceCollection.find({}).toArray((err, documents) => {
@@ -59,6 +60,21 @@ client.connect((err) => {
     adminCollection.insertOne(admin).then((result) => {
       res.send(result);
     });
+  });
+
+  app.post("/place-order", (req, res) => {
+    const order = req.body;
+    orderCollection.insertOne(order).then((result) => {
+      res.send(result);
+    });
+  });
+
+  app.get("/orders", (req, res) => {
+    orderCollection
+      .find({ email: req.query.email })
+      .toArray((err, documents) => {
+        res.send(documents);
+      });
   });
 });
 
