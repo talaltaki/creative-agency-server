@@ -36,9 +36,12 @@ client.connect((err) => {
   });
 
   app.get("/feedbacks", (req, res) => {
-    feedbackCollection.find({}).toArray((err, documents) => {
-      res.send(documents);
-    });
+    feedbackCollection
+      .find({})
+      .limit(6)
+      .toArray((err, documents) => {
+        res.send(documents);
+      });
   });
 
   app.post("/add-feedback", (req, res) => {
