@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
 require("dotenv").config();
+const ObjectId = require("mongodb").ObjectId;
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.9sjrg.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
@@ -91,6 +92,19 @@ client.connect((err) => {
     adminCollection.find({ email: email }).toArray((err, documents) => {
       res.send(documents.length > 0);
     });
+  });
+
+  app.patch("/update-status", (req, res) => {
+    orderCollection
+      .updateOne(
+        { _id: ObjectId(req.body.id) },
+        {
+          $set: { status: req.body.status },
+        }
+      )
+      .then((result) => {
+        res.send(result.modifiedCount > 0);
+      });
   });
 });
 
